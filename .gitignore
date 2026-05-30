@@ -1,0 +1,29 @@
+# .NET
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Python Virtual Environment and Cache
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# PyInstaller
+build/
+dist/
+
+# IDE / OS specific files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+.DS_Store
+Thumbs.db

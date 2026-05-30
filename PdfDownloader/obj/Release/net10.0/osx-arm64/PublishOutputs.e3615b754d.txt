@@ -1,5 +1,0 @@
-/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/publish-mac/PdfDownloader.pdb
-/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/publish-mac/libAvaloniaNative.dylib
-/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/publish-mac/libHarfBuzzSharp.dylib
-/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/publish-mac/libSkiaSharp.dylib
-/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/publish-mac/PdfDownloader
