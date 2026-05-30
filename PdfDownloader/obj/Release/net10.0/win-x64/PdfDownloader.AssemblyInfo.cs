@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PdfDownloader")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+499d1469198979f04501cdd0dd68f2b15a69bc57")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e8168f510c237f07e12b07852478a8c574157f64")]
 [assembly: System.Reflection.AssemblyProductAttribute("PdfDownloader")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PdfDownloader")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

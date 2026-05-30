@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "j6Ilv+efPrE=",
+  "dgSpecHash": "4N4Y9BQK6f0=",
   "success": true,
   "projectFilePath": "/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/PdfDownloader.csproj",
   "expectedPackageFiles": [
@@ -23,7 +23,6 @@
     "/Users/dsap/.nuget/packages/harfbuzzsharp.nativeassets.win32/7.3.0/harfbuzzsharp.nativeassets.win32.7.3.0.nupkg.sha512",
     "/Users/dsap/.nuget/packages/htmlagilitypack/1.11.61/htmlagilitypack.1.11.61.nupkg.sha512",
     "/Users/dsap/.nuget/packages/microcom.runtime/0.11.0/microcom.runtime.0.11.0.nupkg.sha512",
-    "/Users/dsap/.nuget/packages/microsoft.net.illink.tasks/10.0.8/microsoft.net.illink.tasks.10.0.8.nupkg.sha512",
     "/Users/dsap/.nuget/packages/skiasharp/2.88.7/skiasharp.2.88.7.nupkg.sha512",
     "/Users/dsap/.nuget/packages/skiasharp.nativeassets.linux/2.88.7/skiasharp.nativeassets.linux.2.88.7.nupkg.sha512",
     "/Users/dsap/.nuget/packages/skiasharp.nativeassets.macos/2.88.7/skiasharp.nativeassets.macos.2.88.7.nupkg.sha512",
@@ -31,8 +30,9 @@
     "/Users/dsap/.nuget/packages/skiasharp.nativeassets.win32/2.88.7/skiasharp.nativeassets.win32.2.88.7.nupkg.sha512",
     "/Users/dsap/.nuget/packages/system.componentmodel.annotations/4.5.0/system.componentmodel.annotations.4.5.0.nupkg.sha512",
     "/Users/dsap/.nuget/packages/tmds.dbus.protocol/0.15.0/tmds.dbus.protocol.0.15.0.nupkg.sha512",
-    "/Users/dsap/.nuget/packages/microsoft.netcore.app.runtime.osx-arm64/10.0.8/microsoft.netcore.app.runtime.osx-arm64.10.0.8.nupkg.sha512",
-    "/Users/dsap/.nuget/packages/microsoft.aspnetcore.app.runtime.osx-arm64/10.0.8/microsoft.aspnetcore.app.runtime.osx-arm64.10.0.8.nupkg.sha512"
+    "/Users/dsap/.nuget/packages/microsoft.netcore.app.runtime.win-x64/10.0.8/microsoft.netcore.app.runtime.win-x64.10.0.8.nupkg.sha512",
+    "/Users/dsap/.nuget/packages/microsoft.aspnetcore.app.runtime.win-x64/10.0.8/microsoft.aspnetcore.app.runtime.win-x64.10.0.8.nupkg.sha512",
+    "/Users/dsap/.nuget/packages/microsoft.netcore.app.host.win-x64/10.0.8/microsoft.netcore.app.host.win-x64.10.0.8.nupkg.sha512"
   ],
   "logs": [
     {
@@ -45,7 +45,7 @@
       "libraryId": "Tmds.DBus.Protocol",
       "targetGraphs": [
         "net10.0",
-        "net10.0/osx-arm64"
+        "net10.0/win-x64"
       ]
     }
   ]
