@@ -1,5 +1,0 @@
-/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/bin/Release/net10.0/win-x64/publish/PdfDownloader.pdb
-/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/bin/Release/net10.0/win-x64/publish/av_libglesv2.dll
-/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/bin/Release/net10.0/win-x64/publish/libHarfBuzzSharp.dll
-/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/bin/Release/net10.0/win-x64/publish/libSkiaSharp.dll
-/Users/dsap/AntigravityProjects/PDF-downloader/PdfDownloader/bin/Release/net10.0/win-x64/publish/PdfDownloader.exe
