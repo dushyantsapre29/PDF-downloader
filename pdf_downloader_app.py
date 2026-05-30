@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QPushButton, QVBoxLayout, QFileDialog, QLineEdit, QMessageBox, QListWidget, QAbstractItemView, QListWidgetItem
+from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QPushButton, QVBoxLayout, QFileDialog, QLineEdit, QMessageBox, QListWidget, QAbstractItemView, QListWidgetItem, QProgressBar
 from PyQt6.QtCore import Qt
 
 import requests
@@ -40,6 +40,10 @@ class PDFDownloader(QWidget):
         # List of PDFs
         self.list_pdfs = QListWidget()
         self.list_pdfs.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection) # making it so one can select multiple files like in file explorer
+
+        # Progress bar for downloads
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setVisible(False)
 
         # adding widgets to layout
         layout.addWidget(self.label)
@@ -94,7 +98,7 @@ class PDFDownloader(QWidget):
 
     def download_pdfs(self):
         """
-        this function downloads the pdfs
+        this function downloads the pdfs with per-file progress tracking
         """
         selected_items = self.list_pdfs.selectedItems()
         if not selected_items:
@@ -103,25 +107,47 @@ class PDFDownloader(QWidget):
 
         # choosing folder to select PDFs
         folder = QFileDialog.getExistingDirectory(self, "Select Download folder")
-        if not folder: # TODO should we be adding an error warning here?
+        if not folder:
             return
         
-        for item in selected_items:
+        # Initialize progress bar
+        self.progress_bar.setVisible(True)
+        self.progress_bar.setMaximum(len(selected_items))
+        self.progress_bar.setValue(0)
+        
+        for index, item in enumerate(selected_items):
             link = item.data(Qt.ItemDataRole.UserRole) # this retrieves the link we stored before
             text = item.text()
 
             try:
-                response = requests.get(link, allow_redirects=True)
+                # Stream the download to track progress
+                response = requests.get(link, allow_redirects=True, stream=True)
+                total_size = int(response.headers.get('content-length', 0))
                 
                 download_path = os.path.join(folder, text)
+                downloaded = 0
 
-                with open(download_path,"wb") as file:
+                with open(download_path, "wb") as file:
                     print(f'Downloading {text} from {link}...')
-                    file.write(response.content)
+                    for chunk in response.iter_content(chunk_size=8192):  # 8KB chunks
+                        if chunk:
+                            file.write(chunk)
+                            downloaded += len(chunk)
+                            
+                            # Update progress bar for this file
+                            if total_size:
+                                percentage = int((downloaded / total_size) * 100)
+                                print(f'{text}: {percentage}% ({downloaded}/{total_size} bytes)')
+                            
+                            QApplication.processEvents()  # Keep UI responsive
+
+                # Move to next file in overall progress
+                self.progress_bar.setValue(index + 1)
 
             except Exception as e:
                 QMessageBox.critical(self, "Error", f'failed to download {text} from {link}')
 
+        self.progress_bar.setVisible(False)
         QMessageBox.information(self, "Done", "All selected PDFs have been downloaded")
 
 
