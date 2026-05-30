@@ -1,0 +1,162 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:PdfDownloader.Models"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="550"
+        Width="700" Height="550"
+        x:Class="PdfDownloader.Views.MainWindow"
+        Title="PDF Downloader"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Styles>
+        <!-- Accent Button Style -->
+        <Style Selector="Button.Accent">
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,100%" EndPoint="0%,0%">
+                    <GradientStop Offset="0" Color="#4F46E5"/>
+                    <GradientStop Offset="1" Color="#7C3AED"/>
+                </LinearGradientBrush>
+            </Setter>
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.Accent:pointerover">
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,100%" EndPoint="0%,0%">
+                    <GradientStop Offset="0" Color="#4338CA"/>
+                    <GradientStop Offset="1" Color="#6D28D9"/>
+                </LinearGradientBrush>
+            </Setter>
+            <Setter Property="RenderTransform" Value="scale(1.02)" />
+        </Style>
+        
+        <!-- Standard Button Style -->
+        <Style Selector="Button.Secondary">
+            <Setter Property="Background" Value="#2A2A35" />
+            <Setter Property="Foreground" Value="#E5E7EB" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#444455" />
+        </Style>
+        <Style Selector="Button.Secondary:pointerover">
+            <Setter Property="Background" Value="#353545" />
+            <Setter Property="BorderBrush" Value="#6366F1" />
+        </Style>
+    </Window.Styles>
+
+    <Panel>
+        <!-- Acrylic Background effect -->
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="#0F0F16"
+                    TintOpacity="0.85"
+                    MaterialOpacity="0.4" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <!-- Main Content Area -->
+        <Grid RowDefinitions="Auto, Auto, *, Auto" Margin="25,40,25,20">
+            
+            <!-- Title Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,20" Spacing="4">
+                <TextBlock Text="PDF Downloader" FontSize="26" FontWeight="ExtraBold" Foreground="White"/>
+                <TextBlock Text="Scrape and batch download PDFs from any website" FontSize="12" Foreground="#9CA3AF"/>
+            </StackPanel>
+
+            <!-- URL Input & Scrape Button -->
+            <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
+                <TextBox Name="UrlInput" 
+                         Grid.Column="0" 
+                         Margin="0,0,10,0"
+                         Watermark="Enter or paste website URL here (e.g., https://example.com)"
+                         FontSize="14"
+                         Padding="12,10"
+                         Background="#161622"
+                         Foreground="White"
+                         BorderBrush="#312E81"
+                         BorderThickness="1.5"
+                         CornerRadius="6"/>
+                <Button Name="ScrapeButton" 
+                        Grid.Column="1" 
+                        Classes="Accent"
+                        Content="Scrape PDFs"/>
+            </Grid>
+
+            <!-- PDF List Selection -->
+            <Border Grid.Row="2" 
+                    Background="#11111A" 
+                    BorderBrush="#222233" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Padding="4">
+                <ListBox Name="PdfListBox" 
+                         Background="Transparent"
+                         SelectionMode="Multiple,Toggle"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="models:PdfItem">
+                            <Grid ColumnDefinitions="Auto, *" Margin="4">
+                                <!-- Red modern PDF Document Icon -->
+                                <PathIcon Grid.Column="0" 
+                                          Width="24" Height="24" 
+                                          Foreground="#EF4444" 
+                                          Margin="0,0,12,0"
+                                          Data="M6,2 C4.8954305,2 4,2.8954305 4,4 L4,20 C4,21.104569 4.8954305,22 6,22 L18,22 C19.104569,22 20,21.104569 20,20 L20,8 L14,2 L6,2 Z M13,3.5 L18.5,9 L13,9 L13,3.5 Z" />
+                                
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Title}" 
+                                               FontWeight="SemiBold" 
+                                               FontSize="14" 
+                                               Foreground="#F3F4F6"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding DisplayUrl}" 
+                                               FontSize="11" 
+                                               Foreground="#6B7280"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+
+            <!-- Footer Action Panel -->
+            <Grid Grid.Row="3" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                    <TextBlock Name="StatusText" 
+                               Text="Ready to scrape links" 
+                               FontSize="12" 
+                               Foreground="#9CA3AF"/>
+                    <ProgressBar Name="DownloadProgressBar" 
+                                 Height="4" 
+                                 Minimum="0" 
+                                 Maximum="100" 
+                                 Value="0"
+                                 IsVisible="False"
+                                 Foreground="#6366F1"
+                                 Background="#222233"
+                                 CornerRadius="2"/>
+                </StackPanel>
+                
+                <Button Name="DownloadButton" 
+                        Grid.Column="1" 
+                        Classes="Accent"
+                        Content="Download Selected"
+                        IsEnabled="False"/>
+            </Grid>
+        </Grid>
+    </Panel>
+</Window>
