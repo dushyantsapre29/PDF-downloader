@@ -23,6 +23,7 @@ namespace PdfDownloader.Views
         public MainWindow()
         {
             InitializeComponent();
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
             PdfListBox.ItemsSource = _pdfItems;
             
             // Wire events programmatically to avoid compile-time binding generator errors
@@ -146,6 +147,7 @@ namespace PdfDownloader.Views
             SetUiState(isDownloading: true);
             int total = selectedItems.Count;
             int successCount = 0;
+            var failedItems = new List<(string Title, string Error)>();
 
             for (int i = 0; i < total; i++)
             {
@@ -168,6 +170,7 @@ namespace PdfDownloader.Views
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine($"Failed to download {item.Title}: {ex.Message}");
+                    failedItems.Add((item.Title, ex.Message));
                 }
 
                 // Update Progress bar percentage
@@ -175,7 +178,15 @@ namespace PdfDownloader.Views
             }
 
             SetUiState(isDownloading: false);
-            UpdateStatus($"Done! Downloaded {successCount} of {total} PDFs successfully.", false);
+            if (failedItems.Count > 0)
+            {
+                var sampleError = failedItems[0].Error;
+                UpdateStatus($"Downloaded {successCount} of {total} PDFs. First error: {sampleError}", true);
+            }
+            else
+            {
+                UpdateStatus($"Done! Downloaded {successCount} of {total} PDFs successfully.", false);
+            }
         }
 
         private void UpdateStatus(string message, bool isError)
