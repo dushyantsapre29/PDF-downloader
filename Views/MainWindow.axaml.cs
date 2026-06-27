@@ -57,11 +57,35 @@ namespace PdfDownloader.Views
                 UpdateStatus("Fetching webpage...", false);
                 _pdfItems.Clear();
 
-                var response = await _httpClient.GetStringAsync(url);
+                var response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                
+                var finalUrl = response.RequestMessage?.RequestUri?.AbsoluteUri ?? url;
+                var htmlContent = await response.Content.ReadAsStringAsync();
+                
                 var doc = new HtmlDocument();
-                doc.LoadHtml(response);
+                doc.LoadHtml(htmlContent);
 
-                var baseUri = new Uri(url);
+                var baseUri = new Uri(finalUrl);
+                
+                // Handle <base href="..."> if present
+                var baseNode = doc.DocumentNode.SelectSingleNode("//base[@href]");
+                if (baseNode != null)
+                {
+                    var baseHref = baseNode.GetAttributeValue("href", string.Empty);
+                    if (!string.IsNullOrWhiteSpace(baseHref))
+                    {
+                        try
+                        {
+                            baseUri = new Uri(baseUri, baseHref);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Failed to parse base href '{baseHref}': {ex.Message}");
+                        }
+                    }
+                }
+
                 var links = doc.DocumentNode.SelectNodes("//a[@href]");
                 
                 if (links == null)
@@ -74,29 +98,34 @@ namespace PdfDownloader.Views
                 foreach (var linkNode in links)
                 {
                     var href = linkNode.GetAttributeValue("href", string.Empty);
-                    if (href.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+                    if (!string.IsNullOrWhiteSpace(href))
                     {
-                        // Convert relative links to absolute URLs
-                        var absoluteUrl = new Uri(baseUri, href).AbsoluteUri;
-                        
-                        // Extract human-readable text or fallback to filename
-                        var text = linkNode.InnerText?.Trim();
-                        if (string.IsNullOrEmpty(text))
+                        // Clean query parameters and fragments to check for .pdf extension
+                        var cleanHref = href.Split('?')[0].Split('#')[0].Trim();
+                        if (cleanHref.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
                         {
-                            text = Path.GetFileName(absoluteUrl);
-                        }
+                            // Convert relative links to absolute URLs
+                            var absoluteUrl = new Uri(baseUri, href).AbsoluteUri;
+                            
+                            // Extract human-readable text or fallback to filename
+                            var text = linkNode.InnerText?.Trim();
+                            if (string.IsNullOrEmpty(text))
+                            {
+                                text = Path.GetFileName(cleanHref);
+                            }
 
-                        // Make sure file extension is present in title
-                        if (!text.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
-                        {
-                            text += ".pdf";
-                        }
+                            // Make sure file extension is present in title
+                            if (!text.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+                            {
+                                text += ".pdf";
+                            }
 
-                        // Prevent duplicates
-                        if (!_pdfItems.Any(item => item.Url == absoluteUrl))
-                        {
-                            _pdfItems.Add(new PdfItem { Title = text, Url = absoluteUrl });
-                            count++;
+                            // Prevent duplicates
+                            if (!_pdfItems.Any(item => item.Url == absoluteUrl))
+                            {
+                                _pdfItems.Add(new PdfItem { Title = text, Url = absoluteUrl });
+                                count++;
+                            }
                         }
                     }
                 }
