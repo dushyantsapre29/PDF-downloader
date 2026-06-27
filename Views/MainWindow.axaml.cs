@@ -177,6 +177,7 @@ namespace PdfDownloader.Views
             int total = selectedItems.Count;
             int successCount = 0;
             var failedItems = new List<(string Title, string Error)>();
+            var referer = UrlInput.Text?.Trim();
 
             for (int i = 0; i < total; i++)
             {
@@ -189,8 +190,25 @@ namespace PdfDownloader.Views
                     var cleanFileName = GetSafeFilename(item.Title);
                     var fullPath = Path.Combine(destFolderPath, cleanFileName);
 
-                    // Stream file to avoid heavy memory allocation
-                    using var responseStream = await _httpClient.GetStreamAsync(item.Url);
+                    // Create request with Referer and Accept headers
+                    using var request = new HttpRequestMessage(HttpMethod.Get, item.Url);
+                    request.Headers.Add("Accept", "*/*");
+                    if (!string.IsNullOrWhiteSpace(referer))
+                    {
+                        try
+                        {
+                            request.Headers.Referrer = new Uri(referer);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Failed to parse referer URI: {ex.Message}");
+                        }
+                    }
+
+                    using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+                    response.EnsureSuccessStatusCode();
+
+                    using var responseStream = await response.Content.ReadAsStreamAsync();
                     using var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true);
                     
                     await responseStream.CopyToAsync(fileStream);
@@ -199,7 +217,7 @@ namespace PdfDownloader.Views
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine($"Failed to download {item.Title}: {ex.Message}");
-                    failedItems.Add((item.Title, ex.Message));
+                    failedItems.Add((item.Title, $"{ex.Message} (URL: {item.Url})"));
                 }
 
                 // Update Progress bar percentage
