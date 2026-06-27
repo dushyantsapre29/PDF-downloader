@@ -57,7 +57,14 @@ namespace PdfDownloader.Views
                 UpdateStatus("Fetching webpage...", false);
                 _pdfItems.Clear();
 
-                var response = await _httpClient.GetAsync(url);
+                using var request = new HttpRequestMessage(HttpMethod.Get, url);
+                var cookieText = CookieInput.Text?.Trim();
+                if (!string.IsNullOrWhiteSpace(cookieText))
+                {
+                    request.Headers.Add("Cookie", cookieText);
+                }
+
+                var response = await _httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
                 
                 var finalUrl = response.RequestMessage?.RequestUri?.AbsoluteUri ?? url;
@@ -178,6 +185,7 @@ namespace PdfDownloader.Views
             int successCount = 0;
             var failedItems = new List<(string Title, string Error)>();
             var referer = UrlInput.Text?.Trim();
+            var cookieText = CookieInput.Text?.Trim();
 
             for (int i = 0; i < total; i++)
             {
@@ -190,7 +198,7 @@ namespace PdfDownloader.Views
                     var cleanFileName = GetSafeFilename(item.Title);
                     var fullPath = Path.Combine(destFolderPath, cleanFileName);
 
-                    // Create request with Referer and Accept headers
+                    // Create request with Referer, Cookie and Accept headers
                     using var request = new HttpRequestMessage(HttpMethod.Get, item.Url);
                     request.Headers.Add("Accept", "*/*");
                     if (!string.IsNullOrWhiteSpace(referer))
@@ -203,6 +211,10 @@ namespace PdfDownloader.Views
                         {
                             System.Diagnostics.Debug.WriteLine($"Failed to parse referer URI: {ex.Message}");
                         }
+                    }
+                    if (!string.IsNullOrWhiteSpace(cookieText))
+                    {
+                        request.Headers.Add("Cookie", cookieText);
                     }
 
                     using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);

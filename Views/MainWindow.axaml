@@ -69,7 +69,7 @@
         </ExperimentalAcrylicBorder>
 
         <!-- Main Content Area -->
-        <Grid RowDefinitions="Auto, Auto, *, Auto" Margin="25,40,25,20">
+        <Grid RowDefinitions="Auto, Auto, Auto, *, Auto" Margin="25,40,25,20">
             
             <!-- Title Header -->
             <StackPanel Grid.Row="0" Margin="0,0,0,20" Spacing="4">
@@ -96,8 +96,29 @@
                         Content="Scrape PDFs"/>
             </Grid>
 
+            <!-- Authentication Cookies Input -->
+            <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
+                <TextBox Name="CookieInput" 
+                         Grid.Column="0" 
+                         Margin="0,0,10,0"
+                         Watermark="Optional: Paste session cookie or header (e.g., _t=xxxxx) if the website requires login"
+                         FontSize="12"
+                         Padding="12,10"
+                         Background="#161622"
+                         Foreground="White"
+                         BorderBrush="#333344"
+                         BorderThickness="1.5"
+                         CornerRadius="6"/>
+                <TextBlock Grid.Column="1" 
+                           Text="Authentication Cookie" 
+                           VerticalAlignment="Center" 
+                           FontSize="12" 
+                           Foreground="#9CA3AF"
+                           Margin="5,0,0,0"/>
+            </Grid>
+
             <!-- PDF List Selection -->
-            <Border Grid.Row="2" 
+            <Border Grid.Row="3" 
                     Background="#11111A" 
                     BorderBrush="#222233" 
                     BorderThickness="1" 
@@ -134,7 +155,7 @@
             </Border>
 
             <!-- Footer Action Panel -->
-            <Grid Grid.Row="3" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
+            <Grid Grid.Row="4" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
                 <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
                     <TextBlock Name="StatusText" 
                                Text="Ready to scrape links" 
